@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: stg_orders
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        tests:
+          - not_null
+
+      - name: product_id
+        tests:
+          - not_null
+
+      - name: status
+        tests:
+          - accepted_values:
+              values:
+                - completed
+                - pending
+                - cancelled

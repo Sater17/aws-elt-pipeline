@@ -1,0 +1,15 @@
+name: aws_elt_dbt
+version: "1.0.0"
+
+profile: aws_elt_dbt
+
+model-paths: ["models"]
+test-paths: ["tests"]
+
+models:
+  aws_elt_dbt:
+    staging:
+      +materialized: view
+
+    marts:
+      +materialized: table

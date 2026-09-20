@@ -1,0 +1,72 @@
+# ==== Python ====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# ==== Virtual environments ====
+.venv/
+venv/
+env/
+ENV/
+
+# ==== Dagster ====
+.tmp_dagster_home_*/
+.dagster/
+storage/
+*.db
+*.sqlite
+*.sqlite3
+
+# ==== dbt ====
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+dbt_packages/
+.dbt/
+target/
+
+# ==== Logs ====
+logs/
+*.log
+
+# ==== Data (output/cache - điều chỉnh nếu cần track một phần) ====
+data/
+*.csv
+*.parquet
+!data/sample/**  # bỏ comment dòng này nếu muốn giữ lại data mẫu
+
+# ==== Docker ====
+*.env
+.env
+.env.*
+
+# ==== Testing / coverage ====
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# ==== IDE / Editor ====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==== OS ====
+.DS_Store
+Thumbs.db
+
+# ==== Credentials (an toàn) ====
+*.pem
+*.key
+credentials.json
+secrets.yml

@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: fact_orders
+    description: "Order-level fact table. One row represents one order."
+
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_id
+
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+
+  - name: dim_customer
+    description: "Customer dimension."
+
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_product
+    description: "Product dimension."
+
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+  - name: daily_sales
+    description: "Daily aggregated sales metrics."
+    columns:
+      - name: order_date
+        tests:
+          - not_null
+          - unique
+
+      - name: order_count
+        tests:
+          - not_null
+
+      - name: total_sales
+        tests:
+          - not_null
