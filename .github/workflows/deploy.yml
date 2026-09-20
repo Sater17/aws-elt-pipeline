@@ -2,20 +2,34 @@ name: Deploy to EC2
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.0
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
+          username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+
           script: |
-            cd /path/to/repo
+            set -e
+
+            cd ~/aws-elt-pipeline
+
+            echo "Pull latest code..."
             git pull origin main
-            docker compose down
-            docker compose up -d --build
+
+            echo "Build containers..."
+            docker compose build
+
+            echo "Start containers..."
+            docker compose up -d
+
+            echo "Container status..."
+            docker compose ps
