@@ -21,6 +21,7 @@ dagster-graphql==1.13.23
 dagster-pipes==1.13.23
 dagster-shared==1.13.23
 dagster-webserver==1.13.23
+dagster-postgres
 dbt-adapters==1.24.5
 dbt-common==1.39.0
 dbt-core==1.12.5

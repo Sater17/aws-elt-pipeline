@@ -1,0 +1,12 @@
+aws_elt_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: postgres
+      user: elt_user
+      password: elt_password
+      port: 5432
+      dbname: elt_db
+      schema: public
+      threads: 4

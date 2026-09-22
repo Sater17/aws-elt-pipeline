@@ -28,7 +28,7 @@ defs = Definitions(
     resources={
         "dbt": DbtCliResource(
             project_dir=DBT_PROJECT_DIR,
-            profiles_dir=str(Path.home() / ".dbt"),
+            profiles_dir=DBT_PROJECT_DIR,
             target="dev",
         ),
     },

@@ -1,0 +1,8 @@
+storage:
+  postgres:
+    postgres_db:
+      username: elt_user
+      password: elt_password
+      hostname: postgres
+      db_name: elt_db
+      port: 5432

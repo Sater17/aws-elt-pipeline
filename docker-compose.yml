@@ -3,17 +3,77 @@ services:
     image: postgres:16
     container_name: aws_elt_postgres
     restart: unless-stopped
-
     environment:
       POSTGRES_USER: elt_user
       POSTGRES_PASSWORD: elt_password
       POSTGRES_DB: elt_db
-
-    ports:
-      - "5433:5432"
-
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U elt_user -d elt_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  dagster_code:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: elt-dagster-code
+    restart: unless-stopped
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+    volumes:
+      - ./dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      dagster api grpc
+      -h 0.0.0.0
+      -p 4000
+      -m orchestration.definitions
+
+  dagster_webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: elt-dagster-webserver
+    restart: unless-stopped
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+    volumes:
+      - ./dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
+    depends_on:
+      postgres:
+        condition: service_healthy
+      dagster_code:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    command: >
+      dagster-webserver
+      -h 0.0.0.0
+      -p 3000
+      -w /opt/dagster/dagster_home/workspace.yaml
+
+  dagster_daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: elt-dagster-daemon
+    restart: unless-stopped
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+    volumes:
+      - ./dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+    depends_on:
+      postgres:
+        condition: service_healthy
+      dagster_code:
+        condition: service_started
+    command: dagster-daemon run
 
 volumes:
   postgres_data:
