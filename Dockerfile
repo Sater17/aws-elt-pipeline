@@ -11,3 +11,10 @@ COPY ingestion ./ingestion
 COPY dbt ./dbt
 
 ENV PYTHONPATH=/opt/dagster/app
+
+# Generate manifest.json cho dbt project
+WORKDIR /opt/dagster/app/dbt
+RUN dbt deps || true
+RUN dbt parse --profiles-dir /opt/dagster/app/dbt
+
+WORKDIR /opt/dagster/app

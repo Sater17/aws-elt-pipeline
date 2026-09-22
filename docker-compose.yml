@@ -68,12 +68,16 @@ services:
       DAGSTER_HOME: /opt/dagster/dagster_home
     volumes:
       - ./dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
     depends_on:
       postgres:
         condition: service_healthy
       dagster_code:
         condition: service_started
-    command: dagster-daemon run
+    command: >
+      dagster-daemon run
+      -w /opt/dagster/dagster_home/workspace.yaml
+    
 
 volumes:
   postgres_data:
